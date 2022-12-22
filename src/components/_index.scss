@@ -1,0 +1,368 @@
+.home {
+    &__main {
+      background: map-get($colors, red);
+      height: 100vh;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-around;
+      img {
+        width: 28%;
+      }
+    }
+    &__menu {
+      background-image: url('../images/background-aimant.png');
+      background-position: center;
+      background-size: cover;
+      font-family: Didot, 'Didot LT STD';
+      height: 120vh;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-around;
+    }
+    &__tabs {
+      text-align: center;
+  
+      h4 {
+        margin: 50px 0px;
+        width: 250px;
+        &:hover {
+          color: map-get($colors, red);
+          transition: color 0.8s ease-out;
+          cursor: pointer;
+        }
+      }
+    }
+    &__footer {
+      background: map-get($colors, red);
+      padding: 50px 0px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-around;
+      p {
+        font-size: 0.8rem !important;
+      }
+    }
+  }
+  
+  .section {
+    padding: 100px 0px;
+  
+    margin-top: 50px;
+    width: 100%;
+  
+    &__red {
+      background: map-get($colors, red);
+  
+      p {
+        color: white !important;
+      }
+      h2 {
+        color: white;
+      }
+    }
+    &__white {
+      h2 {
+        color: map-get($colors, red);
+      }
+      p {
+        color: map-get($colors, red) !important;
+      }
+    }
+    a {
+      text-decoration: none !important;
+    }
+  }
+  
+  .wp-block-columns {
+    display: flex !important;
+  
+    a {
+      text-decoration: none !important;
+    }
+    h2 {
+      color: map-get($colors, red);
+    }
+  }
+  
+  .wp-block-column {
+    margin: 1rem;
+  
+    @include breakpoint(s) {
+      margin-right: 50px;
+    }
+    @include breakpoint(l) {
+      margin-right: 80px;
+    }
+    p {
+      margin-bottom: 5px;
+    }
+    img {
+      width: 20vw;
+    }
+    figure {
+      width: 20vw;
+    }
+  }
+  
+  .demo {
+    margin-left: 5vw;
+    position: absolute;
+    top: 15vh;
+    @include breakpoint(s) {
+      top: 18vh;
+      margin-left: 1vw;
+    }
+  
+    @include breakpoint(m) {
+      top: 35vh;
+      margin-left: 1vw;
+    }
+  }
+  
+  .left-column {
+    width: 20vw;
+  }
+  
+  .abnner {
+    display: none;
+  }
+  
+  .banner {
+    display: none;
+    img {
+      width: 100vw !important;
+  
+      object-fit: cover;
+      @include breakpoint(s) {
+      }
+    }
+  }
+  
+  .main-column {
+    .video {
+      width: 300px !important;
+    }
+    width: 70%;
+    @include breakpoint(s) {
+      margin-left: 100px;
+    }
+  }
+  
+  .name {
+    color: map-get($colors, red) !important;
+  }
+  
+  .apropos {
+    width: 50%;
+    font-size: 0.9rem !important;
+    text-align: center;
+    color: white !important;
+    font-weight: bold !important;
+    p {
+      color: white !important;
+      font-weight: bold !important;
+    }
+  }
+  
+  .infos {
+    text-align: center;
+    width: 180px;
+  }
+  
+  .instagram {
+    position: fixed;
+    bottom: 1px;
+    left: 1rem;
+  }
+  
+  .contact {
+    position: fixed;
+    bottom: 1px;
+    right: 1rem;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+  
+  .cards {
+    width: 80%;
+    @include breakpoint(s) {
+      width: 70%;
+    }
+  
+    @include breakpoint(m) {
+      width: 65%;
+    }
+  
+    @include breakpoint(l) {
+      width: 55%;
+    }
+    @include breakpoint(xl) {
+      width: 55%;
+    }
+    @include breakpoint(xxl) {
+      width: 65%;
+    }
+  
+    margin: auto;
+  
+    p {
+      @include breakpoint(l) {
+        font-size: 0.9rem;
+      }
+    }
+  }
+  
+  .grid-container {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    padding: 10px;
+  }
+  
+  .grid-item {
+    max-width: 350px;
+    @include breakpoint(xxl) {
+      max-width: unset;
+    }
+  
+    padding: 2px;
+    font-size: 30px;
+    text-align: center;
+  
+    p {
+      color: white;
+    }
+    img {
+      object-fit: cover;
+      height: 80px;
+      width: 80px;
+      @include breakpoint(xs) {
+        height: 100px;
+        width: 100px;
+      }
+      @include breakpoint(s) {
+        height: 170px;
+        width: 170px;
+      }
+  
+      @include breakpoint(m) {
+        height: 190px;
+        width: 190px;
+      }
+  
+      @include breakpoint(l) {
+        height: 190px;
+      }
+      @include breakpoint(xxl) {
+        height: 300px;
+        width: 300px;
+      }
+    }
+  }
+  
+  .picture {
+    img {
+      filter: grayscale(100%);
+      flex: 0 0 80%;
+      &:hover {
+        filter: grayscale(0%);
+        transition: filter 0.8s ease-out;
+      }
+    }
+  }
+  
+  .download {
+    display: none;
+    @include breakpoint(s) {
+      color: red;
+      margin-left: 20px;
+      text-decoration: underline;
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+  
+  .test {
+    position: relative;
+    height: 100px;
+    @include breakpoint(s) {
+      height: 200px;
+    }
+    @include breakpoint(l) {
+      height: 230px;
+    }
+    @include breakpoint(xxl) {
+      height: 300px;
+    }
+  }
+  
+  .banner-container {
+    align-items: center;
+    display: flex;
+    width: 100%;
+    height: 70px;
+    margin-bottom: 32px;
+    background-size: cover !important;
+    background-repeat: no-repeat !important;
+  
+    @include breakpoint(l) {
+      height: 250px;
+      background-size: cover !important;
+    }
+  
+    background: #660000;
+  }
+  
+  .banner-red {
+    background-blend-mode: multiply;
+  }
+  
+  .artist-video {
+    display: flex;
+    justify-content: center;
+    margin: 0;
+  
+    @include breakpoint(m) {
+      margin: 32px 0;
+    }
+  }
+  
+  .nameBig {
+    color: white;
+    font-size: 2rem;
+    width: 100%;
+  
+    @include breakpoint(s) {
+      font-size: 4rem;
+    }
+    @include breakpoint(m) {
+      font-size: 6rem;
+    }
+  
+    @include breakpoint(l) {
+      font-size: 7rem;
+    }
+  
+    @include breakpoint(xxl) {
+      font-size: 8rem;
+    }
+  
+    font-weight: 900;
+  }
+  
+  figcaption {
+    margin-top: -20px;
+    font-size: 0.8rem;
+  }
+  
+  .height {
+    height: 200px;
+  }
+  
