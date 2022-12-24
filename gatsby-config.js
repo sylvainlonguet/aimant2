@@ -6,8 +6,8 @@ module.exports = {
     title: `.:: aimant ::.`,
     description: `.:: aimant ::: agence artistique ::.`,
     author: `François Tessier`,
-    siteUrl: `https://www.yourdomain.tld`, 
-    image: `/aimant_logo.png`
+    siteUrl: `https://cms.aimant.art/`, 
+    image: `src/images/aimant_logo.png`
   },
   plugins: [{
     resolve: 'gatsby-source-wordpress',

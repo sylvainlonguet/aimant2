@@ -5,6 +5,8 @@ import Mes from "../components/mes"
 import Comediennes from "../components/comediennes"
 import Comediens from "../components/comediens"
 import { Link }  from 'gatsby';
+import { SEO } from "../components/seo"
+
 
 
 
@@ -15,6 +17,8 @@ import logo from '../images/aimant_logo.png';
 
 export default function Home({ data }) {
 
+
+  console.log(data.site)
 
   const catComediennes = data.allWpCategory.edges[3].node.name
   const catComediens = data.allWpCategory.edges[4].node.name
@@ -265,6 +269,13 @@ export default function Home({ data }) {
 
 export const pageQuery = graphql`
   query {
+    site {
+      siteMetadata {
+        title
+        description
+        image
+      }
+     }
     allWpPost(
       limit: 1000
       sort: {title: ASC}
@@ -300,3 +311,8 @@ export const pageQuery = graphql`
        }
   }
 `
+
+
+export const Head = () => (
+  <SEO />
+)
