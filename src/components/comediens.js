@@ -1,15 +1,15 @@
 import React from "react"
-import { useStaticQuery, graphql } from "gatsby"
+import {useStaticQuery, graphql}  from "gatsby"
 import { Link }  from 'gatsby';
 
 
-export default function Auteurs() {
+export default function Comediens() {
   const data = useStaticQuery(graphql`
-    query monQuery {
+    query miQuery {
         allWpPost(
         limit: 1000
         sort: {title: ASC}
-        filter: {categories: {nodes: {elemMatch: {slug: {eq: "auteurs-realisateurs"}}}}}
+        filter: {categories: {nodes: {elemMatch: {slug: {eq: "comediens"}}}}}
   ) {
     nodes {
       id

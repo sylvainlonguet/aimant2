@@ -5,9 +5,13 @@ import SimpleReactLightbox, { SRLWrapper } from 'simple-react-lightbox';
 import Vimeo from '@u-wave/react-vimeo';
 import YouTube from 'react-youtube';
 import '../components/style.scss'
+import ReactToPdf from "react-to-pdf"; 
+
 
 
 import contentParser from 'gatsby-wpgraphql-inline-images';
+
+const ref = React.createRef();
 
 const options = {
     buttons: {
@@ -57,6 +61,7 @@ const options = {
         return (
             <SimpleReactLightbox>
       <React.Fragment>
+      <div className="poste"  ref={ref}>
           <div className={`post-${id}`}>
          
  {/* Bannière */}
@@ -105,18 +110,29 @@ const options = {
 
          
 
+<ReactToPdf targetRef={ref} filename="div-blue.pdf">
+        {({toPdf}) => (
+            <button onClick={toPdf}>Generate pdf</button>
+        )}
+    </ReactToPdf>
           </div>
-          <div dangerouslySetInnerHTML={{ __html: content }} />
-
-          </React.Fragment>
-          <p role="button" className="download" onClick={() => window.print()}>
+          TELECHARGER<p role="button" className="download" onClick={() => window.print()}>
         Télécharger le cv
       </p>
+          <div dangerouslySetInnerHTML={{ __html: content }} />
+          
+         
+          </div>
+          </React.Fragment>
+        
+         
           </SimpleReactLightbox>
+          
+
         )
       }
       
-
+    
 
 export default WpPost;
 
@@ -124,6 +140,7 @@ export default WpPost;
 export const query = graphql`
   query ($id: String) {
     wpPost(id: { eq: $id }) {
+        id
         title
         content
         uri

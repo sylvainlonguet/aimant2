@@ -3,13 +3,13 @@ import { useStaticQuery, graphql } from "gatsby"
 import { Link }  from 'gatsby';
 
 
-export default function Auteurs() {
+export default function Comediennes() {
   const data = useStaticQuery(graphql`
-    query monQuery {
+    query myQuery {
         allWpPost(
         limit: 1000
         sort: {title: ASC}
-        filter: {categories: {nodes: {elemMatch: {slug: {eq: "auteurs-realisateurs"}}}}}
+        filter: {categories: {nodes: {elemMatch: {slug: {eq: "comediennes"}}}}}
   ) {
     nodes {
       id
@@ -27,7 +27,6 @@ export default function Auteurs() {
   }
     }
   `)
-
 
 
 

@@ -1,16 +1,19 @@
 import  React from "react"
-import { graphql } from "gatsby"
+import {graphql} from "gatsby"
 import Auteurs from "../components/auteurs"
+import Mes from "../components/mes"
+import Comediennes from "../components/comediennes"
+import Comediens from "../components/comediens"
+import { Link }  from 'gatsby';
+
+
+
 import logo from '../images/aimant_logo.png';
-import { Link } from 'gatsby';
 
 
 
 
 export default function Home({ data }) {
-
-
-  // Comédiennes
 
 
   const catComediennes = data.allWpCategory.edges[3].node.name
@@ -76,6 +79,7 @@ export default function Home({ data }) {
        <div className="home__main">
           <img src={logo} alt="logo" />
         </div>
+       
 
         <div className="home__menu">
           <div className="home__tabs">
@@ -90,16 +94,17 @@ export default function Home({ data }) {
           <div className="cards">
             <h2> {catComediennes}</h2>
             <div className="grid-container">
-            {comediennes.map((c) => (
-              <Link key={c.uri} to={c.uri}>
-                <div className="grid-item">
-                  <div className="picture">
-                    {c.acf.mignature ? <img src={c.acf.mignature.sourceUrl} alt="photo" /> : ' '}
-                  </div>
-                  <p>{c.excerpt.replace(/<\/?[^>]*?>/gi, '')}</p>
-                </div>
-              </Link>
-            ))}
+            {/* {comediennes.map((c) => (
+      <Link key={c.uri} to={c.uri}>
+        <div className="grid-item">
+          <div className="picture">
+            {c.acf.mignature ? <img src={c.acf.mignature.sourceUrl} alt="photo" /> : ' '}
+          </div>
+          <p>{c.excerpt.replace(/<\/?[^>]*?>/gi, '')}</p>
+        </div>
+      </Link>
+    ))} */}
+    <Comediennes/>
             </div>
           </div>
       </div>
@@ -108,16 +113,17 @@ export default function Home({ data }) {
           <div className="cards">
             <h2> {catComediens}</h2>
             <div className="grid-container">
-            {comediens.map((c) => (
-              <Link key={c.uri} to={c.uri}>
-                <div className="grid-item">
-                  <div className="picture">
-                    {c.acf.mignature ? <img src={c.acf.mignature.sourceUrl} alt="photo" /> : ' '}
-                  </div>
-                  <p>{c.excerpt.replace(/<\/?[^>]*?>/gi, '')}</p>
-                </div>
-              </Link>
-            ))}
+            {/* {comediens.map((c) => (
+      <Link key={c.uri} to={c.uri}>
+        <div className="grid-item">
+          <div className="picture">
+            {c.acf.mignature ? <img src={c.acf.mignature.sourceUrl} alt="photo" /> : ' '}
+          </div>
+          <p>{c.excerpt.replace(/<\/?[^>]*?>/gi, '')}</p>
+        </div>
+      </Link>
+    ))} */}
+    <Comediens/>
             </div>
           </div>
       </div>
@@ -125,18 +131,18 @@ export default function Home({ data }) {
       <div id="auteurs" className="section section__red">
           <div className="cards">
             <h2> {catAuteurs}</h2>
-            <div className="grid-container">
-            {auteurs.map((c) => (
-              <Link key={c.uri} to={c.uri}>
-                <div className="grid-item">
-                  <div className="picture">
-                    {c.acf.mignature ? <img src={c.acf.mignature.sourceUrl} alt="photo" /> : ' '}
-                  </div>
-                  <p>{c.excerpt.replace(/<\/?[^>]*?>/gi, '')}</p>
-                </div>
-              </Link>
-            ))}
-            </div>
+            {/* {auteurs.map((c) => (
+      <Link key={c.uri} to={c.uri}>
+        <div className="grid-item">
+          <div className="picture">
+            {c.acf.mignature ? <img src={c.acf.mignature.sourceUrl} alt="photo" /> : ' '}
+          </div>
+          <p>{c.excerpt.replace(/<\/?[^>]*?>/gi, '')}</p>
+        </div>
+      </Link>
+    ))} */}
+
+    <Auteurs/>
           </div>
       </div>
 
@@ -145,16 +151,17 @@ export default function Home({ data }) {
           <div className="cards">
             <h2> {catMes}</h2>
             <div className="grid-container">
-            {metteurs.map((c) => (
-              <Link key={c.uri} to={c.uri}>
-                <div className="grid-item">
-                  <div className="picture">
-                    {c.acf.mignature ? <img src={c.acf.mignature.sourceUrl} alt="photo" /> : ' '}
-                  </div>
-                  <p>{c.excerpt.replace(/<\/?[^>]*?>/gi, '')}</p>
-                </div>
-              </Link>
-            ))}
+            {/* {metteurs.map((c) => (
+      <Link key={c.uri} to={c.uri}>
+        <div className="grid-item">
+          <div className="picture">
+            {c.acf.mignature ? <img src={c.acf.mignature.sourceUrl} alt="photo" /> : ' '}
+          </div>
+          <p>{c.excerpt.replace(/<\/?[^>]*?>/gi, '')}</p>
+        </div>
+      </Link>
+    ))} */}
+    <Mes/>
             </div>
           </div>
       </div>
@@ -290,6 +297,6 @@ export const pageQuery = graphql`
             slug
           }
         }
-  }
+       }
   }
 `

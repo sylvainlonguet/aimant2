@@ -3,16 +3,8 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
       {
         allWpPost {
           nodes {
-            title
-            content
+            id
             uri
-            acf {
-              bannertext
-              bannerpicture {
-              sourceUrl
-          }
-            video
-        }
           }
         }
       }
