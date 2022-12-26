@@ -366,3 +366,65 @@
     height: 200px;
   }
   
+
+  .popin{
+    position: absolute;
+    width: 100vw;
+    
+    top: 0px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    
+    &__inside{ 
+      z-index: 99;
+      width: 21cm;
+      
+   
+      background: pink;
+      &__content{
+        p{
+          font-size: 0.7rem ;
+          
+        }
+      }
+     
+     
+    
+
+    }
+  }
+  
+
+  #report{
+  
+  }
+
+
+.cv{
+  &__infos{
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width:300px;
+  margin: 30px;
+  p{
+    margin-bottom: 5px!important;
+  }
+  }
+  &__logo{
+    width: 100px;
+  }
+  &__button{
+  width: 250px;
+    margin-left: 20px;
+    &:hover{
+   text-decoration:  underline;
+      cursor: pointer;
+    }
+  }
+  
+  
+}
+
+

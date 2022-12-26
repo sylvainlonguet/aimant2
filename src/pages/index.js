@@ -173,7 +173,7 @@ export default function Home({ data }) {
 
    
       
-     
+
          
       <div id="contact" className="home__footer">
           {apropos.map((c) => (
