@@ -18,7 +18,6 @@ import logo from '../images/aimant_logo.png';
 export default function Home({ data }) {
 
 
-  console.log(data.site)
 
   const catComediennes = data.allWpCategory.edges[3].node.name
   const catComediens = data.allWpCategory.edges[4].node.name

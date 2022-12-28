@@ -57,7 +57,6 @@ const options = {
        const generatePDF = () => {
         setIsVisible(true)
  
-        console.log('clicked')
       const report = new JsPDF('portrait','pt','a1');
      
       report.html(document.querySelector('#cv')).then(() => {
@@ -105,8 +104,6 @@ const options = {
         (p) => (p.categories.nodes[0].slug === "mail") ,
       );
    
-      console.log(data)
-
 
         return (
             <SimpleReactLightbox>
