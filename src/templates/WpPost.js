@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import { graphql } from "gatsby"
 import parse from 'html-react-parser';
-import SimpleReactLightbox, { SRLWrapper } from 'simple-react-lightbox';
+// import SimpleReactLightbox, { SRLWrapper } from 'simple-react-lightbox';
 import Vimeo from '@u-wave/react-vimeo';
 import YouTube from 'react-youtube';
 import '../components/style.scss'
@@ -106,7 +106,6 @@ const options = {
    
 
         return (
-            <SimpleReactLightbox>
               <React.Fragment>
                 <div className={`post-${id}`} >
                   {bannerpicture &&
@@ -204,7 +203,6 @@ const options = {
          </div>
    
           </React.Fragment>
-          </SimpleReactLightbox>
         )
       }
       
