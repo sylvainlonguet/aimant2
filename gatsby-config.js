@@ -9,11 +9,13 @@ module.exports = {
     siteUrl: `https://cms.aimant.art/`, 
     image: `src/images/aimant_logo.png`
   },
-  plugins: [{
+  plugins: [
+    "gatsby-plugin-sass",
+    {
     resolve: 'gatsby-source-wordpress',
     options: {
       "url": "https://cms.aimant.art/graphql"
      
     }
-  }, "gatsby-plugin-image", "gatsby-plugin-sharp", "gatsby-transformer-sharp", "gatsby-plugin-sass"]
+  }, "gatsby-plugin-image", "gatsby-plugin-sharp", "gatsby-transformer-sharp"]
 };
