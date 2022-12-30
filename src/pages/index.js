@@ -195,10 +195,11 @@ export default function Home({ data }) {
   </a>
 ))}
 
+<p className="ex">Assisté par Noémie Vanier  </p>
 {adresse.map((c) => (
-  <p key={c.uri} className="infos">
-    {c.content.replace(/<\/?[^>]*?>/gi, '')}
-  </p>
+  <a key={c.uri} href={`mailto:${c.content.replace(/<\/?[^>]*?>/gi, '')}`}>
+       <p className="infos">{c.content.replace(/<\/?[^>]*?>/gi, '')}</p>
+    </a>
 ))}
 
 {ville.map((c) => (
@@ -313,5 +314,8 @@ export const pageQuery = graphql`
 
 
 export const Head = () => (
+
   <SEO />
+  
+
 )
