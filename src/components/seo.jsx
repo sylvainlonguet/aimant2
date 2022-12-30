@@ -7,7 +7,7 @@ export const SEO = ({ title, description, pathname, children }) => {
   const seo = {
     title: title || defaultTitle,
     description: description || defaultDescription,
-    image: `${siteUrl}${image}`,
+    image: `https://cms.aimant.art/src/images/${image}`,
     url: `${siteUrl}${pathname || ``}`
   }
 

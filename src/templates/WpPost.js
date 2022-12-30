@@ -9,7 +9,9 @@ import JsPDF from 'jspdf';
 import logo from '../images/aimant_logo.png'
 import {parseSrcset, stringifySrcset} from 'srcset';
 import Lightbox from "yet-another-react-lightbox";
+import Captions from "yet-another-react-lightbox/plugins/captions";
 import "yet-another-react-lightbox/styles.css";
+import "yet-another-react-lightbox/plugins/captions.css";
 
 
 
@@ -104,7 +106,7 @@ import "yet-another-react-lightbox/styles.css";
       const orderedSrcSet = []
       imgList.forEach((p, index) => {
         if ((index % 2 !== 0) && (p.currentSrc !== '' ))  {
-          selectedImg.push(p.currentSrc) 
+          selectedImg.push(p) 
         }
       })
       selectedImg.forEach((p, index) => {
@@ -117,9 +119,8 @@ import "yet-another-react-lightbox/styles.css";
       arrayRest.map((p) => {
           orderedSrcSet.push(p) 
       })
-      const filteredSrcSet = orderedSrcSet.filter(name => name.match(/(https?:\/\/.*\.(?:png|jpg))/i))
-      filteredSrcSet.map((p) => {
-        srcSetObject.push({src: p})
+      orderedSrcSet.map((p) => {
+        srcSetObject.push({src: p.currentSrc, title: p.alt})
      })
       setSrcSet(srcSetObject)
       setOpen(true)
@@ -172,21 +173,22 @@ import "yet-another-react-lightbox/styles.css";
                   </React.Fragment>
               )}
 
-            <p onClick={generatePDF} className="cv__button">Télécharger le CV en PDF</p>
+            {/* <p onClick={generatePDF} className="cv__button">Télécharger le CV en PDF</p> */}
           </div>
 
           <Lightbox
               open={open}
               close={() => setOpen(false)}
               slides={srcSet}
+              plugins={[Captions]}
           />
 
           <div id="cv" onClick={handleBox} >
                 <div  dangerouslySetInnerHTML={{ __html: content }} />
-                    <div className="cv__infos">
+                    {/* <div className="cv__infos">
                         <img src={logo} className="cv__logo" />
-                    <div>
 
+                    <div>
                     {nom.map((c) => (
                         <p key={c.uri}>
                             {c.content.replace(/<\/?[^>]*?>/gi, '')}
@@ -208,7 +210,7 @@ import "yet-another-react-lightbox/styles.css";
                       </a>
                     ))}
                 </div>
-            </div> 
+            </div>  */}
          </div>
       </React.Fragment>
         )
