@@ -5,7 +5,7 @@ import { Link }  from 'gatsby';
 
 export default function Mes() {
   const data = useStaticQuery(graphql`
-    query maQuery {
+    query mesQuery {
         allWpPost(
         limit: 1000
         sort: {title: ASC}

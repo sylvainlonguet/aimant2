@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-
 import { graphql } from "gatsby"
 import parse from 'html-react-parser';
 // import SimpleReactLightbox, { SRLWrapper } from 'simple-react-lightbox';
@@ -8,13 +7,15 @@ import YouTube from 'react-youtube';
 import '../components/style.scss'
 import JsPDF from 'jspdf';
 import logo from '../images/aimant_logo.png'
+import {parseSrcset, stringifySrcset} from 'srcset';
+import Lightbox from "yet-another-react-lightbox";
+import "yet-another-react-lightbox/styles.css";
 
 
-const ref = React.createRef();
 
+  const ref = React.createRef();
 
-
-const options = {
+  const options = {
     buttons: {
       showAutoplayButton: false,
       showCloseButton: true,
@@ -34,97 +35,128 @@ const options = {
     },
   };
 
- 
-
- 
- 
   
   const replaceImage = (content) =>
     content &&
     content.replace(/http:\/\/aimantarwm.cluster021.hosting.ovh.net/gim, `https://cms.aimant.art`);
 
 
-    const WpPost = ({ data }) => {
+  const WpPost = ({ data }) => {
+    const [firstPic, setFirstPic] = useState('');     
+    const [srcSet, setSrcSet] = useState('');   
+    const [open, setOpen] = React.useState(false); 
 
-      const [isVisible, setIsVisible] = useState(false);    
-
-      
-      const handleCV = () => {
-        setIsVisible(true)
-       }
-     
-
-       const generatePDF = () => {
-        setIsVisible(true)
- 
+    const generatePDF = () => {
       const report = new JsPDF('portrait','pt','a1');
-     
       report.html(document.querySelector('#cv')).then(() => {
           report.save(`${title}`);
-     
       });
-      setTimeout(() => {
-        setIsVisible(false)
-      }, 500)
-   
-  
-   
-     
     }
       
-      const {
+    const {
           wpPost: { title, content, uri, id,  acf }
-        } = data
-        const clearContent = replaceImage(content);
-        const { video = '' } = acf || {};
-        const { bannerpicture = '' } = acf || {};
-        const { bannertext = '' } = acf || {};
-        const isVimeo = video && video.indexOf('vimeo') >= 0;
-        const youtubeMatches =
-        !isVimeo && video && video.match(/^.*(youtu.be\/|v\/|e\/|u\/\w+\/|embed\/|v=)([^#\&\?]*).*/);
-      const youtubeId = youtubeMatches && youtubeMatches.length >= 1 ? youtubeMatches[2] : '';
-
-      const postHaveBanner = clearContent.indexOf('banner') >= 0;
-      const bannerClass = `banner-container${!postHaveBanner ? ' banner-red' : ''}`;
-    
-      const numero = data.allWpPost.nodes.filter(
-        (p) => (p.categories.nodes[0].slug === "numero") ,
-      );
-    
-      const contact = data.allWpPost.nodes.filter(
-        (p) => (p.categories.nodes[0].slug === "contact") ,
-      );
-
-      const nom = data.allWpPost.nodes.filter(
-        (p) => (p.categories.nodes[0].slug === "nom") ,
-      );
-    
-    
-      const mail = data.allWpPost.nodes.filter(
-        (p) => (p.categories.nodes[0].slug === "mail") ,
-      );
+    } = data
+    const clearContent = replaceImage(content);
+    const { video = '' } = acf || {};
+    const { bannerpicture = '' } = acf || {};
+    const { bannertext = '' } = acf || {};
+    const isVimeo = video && video.indexOf('vimeo') >= 0;
+    const youtubeMatches =
+      !isVimeo && video && video.match(/^.*(youtu.be\/|v\/|e\/|u\/\w+\/|embed\/|v=)([^#\&\?]*).*/);
+    const youtubeId = youtubeMatches && youtubeMatches.length >= 1 ? youtubeMatches[2] : '';
+    const postHaveBanner = clearContent.indexOf('banner') >= 0;
+    const bannerClass = `banner-container${!postHaveBanner ? ' banner-red' : ''}`;
+    const numero = data.allWpPost.nodes.filter(
+      (p) => (p.categories.nodes[0].slug === "numero") ,
+    );
+    const contact = data.allWpPost.nodes.filter(
+      (p) => (p.categories.nodes[0].slug === "contact") ,
+    );
+    const nom = data.allWpPost.nodes.filter(
+      (p) => (p.categories.nodes[0].slug === "nom") ,
+    );
+    const mail = data.allWpPost.nodes.filter(
+      (p) => (p.categories.nodes[0].slug === "mail") ,
+    );
+    const regex = /(https?:\/\/.*\.(?:png|jpg))/i
    
+    const srcSetObject = []
 
-        return (
-              <React.Fragment>
-                <div className={`post-${id}`} >
-                  {bannerpicture &&
-                    bannerpicture.sourceUrl && (
-                      <div
-                        className={bannerClass}
-                        style={{
-                          backgroundImage: `url(${bannerpicture.sourceUrl})`,
-                        }}
-                      >
-                        {!postHaveBanner && bannertext && (
-                          <div className="nameBig">{bannertext}</div>
-                        )}
-                      </div>
-                    )}
-                      {video && (
-                    <React.Fragment>
-                      {' '}
-                      {isVimeo ? (
+    setTimeout(() => {
+      const imgList = document.querySelectorAll('img') 
+      const selectedImgList = []
+      console.log(imgList)
+      imgList.forEach((p, index) => {
+        if ((index % 2 !== 0) && (p.currentSrc !== '' ))  {
+          selectedImgList.push(p) 
+        }
+      })
+      console.log(selectedImgList)
+      selectedImgList.forEach((p, index) => {
+        p.classList.add(`pic${index}`)
+        p.addEventListener("click", (e) => handleBox(e) );
+      })
+    }, 2000)
+
+    const handleBox = (e) => { 
+      e.preventDefault();
+      console.log(e.target.className)
+      const imgList = document.querySelectorAll('img') 
+      const selectedImg = []
+      const arrayRest= []
+      const orderedSrcSet = []
+      console.log(imgList)
+      imgList.forEach((p, index) => {
+        if ((index % 2 !== 0) && (p.currentSrc !== '' ))  {
+          selectedImg.push(p.currentSrc) 
+        }
+      })
+      console.log(selectedImg)
+      selectedImg.forEach((p, index) => {
+        if (`pic${index}` === e.target.className )  {
+          orderedSrcSet.push(p) 
+          console.log('meme index')
+        } else {
+          console.log('pas meme index')
+          arrayRest.push(p) 
+        }
+      })
+      arrayRest.map((p) => {
+          orderedSrcSet.push(p) 
+      })
+      console.log(orderedSrcSet)
+      const filteredSrcSet = orderedSrcSet.filter(name => name.match(/(https?:\/\/.*\.(?:png|jpg))/i))
+      console.log(filteredSrcSet)
+      filteredSrcSet.map((p) => {
+        srcSetObject.push({src: p})
+     })
+      console.log(srcSetObject)
+      setSrcSet(srcSetObject)
+      setOpen(true)
+    }
+   
+      
+
+    return (
+      <React.Fragment>
+          <div className={`post-${id}`} >
+              {bannerpicture &&
+                bannerpicture.sourceUrl && (
+                    <div
+                      className={bannerClass}
+                      style={{
+                        backgroundImage: `url(${bannerpicture.sourceUrl})`,
+                      }}
+                    >
+                      {!postHaveBanner && bannertext && (
+                        <div className="nameBig">{bannertext}</div>
+                      )}
+                    </div>
+                )}
+              {video && (
+                  <React.Fragment>
+                    {' '}
+                    {isVimeo ? (
                         <Vimeo
                           className="artist-video"
                           video={video}
@@ -147,62 +179,49 @@ const options = {
                           />
                         </div>
                       )}
-                    </React.Fragment>
-                  )}
+                  </React.Fragment>
+              )}
 
-
-{/* { isVisible? 
-<div className="popin">    <React.Fragment> <div className="popin__inside" id="report"> POPIN 
-<div className="popin__inside__content" dangerouslySetInnerHTML={{ __html: content }} />
-<button onClick={generatePDF}   type="button">Export PDF</button>
-</div>
-</React.Fragment>
- </div>
-  : ''} */}
-
-
-<p onClick={generatePDF} className="cv__button">Télécharger le CV en PDF</p>
+            <p onClick={generatePDF} className="cv__button">Télécharger le CV en PDF</p>
           </div>
-         
-      <div id="cv" >
-    
-      
-         
-         <div  dangerouslySetInnerHTML={{ __html: content }} />
-         <div className="cv__infos">
-        <img src={logo} className="cv__logo" />
-       <div>
 
-       {nom.map((c) => (
-  <p key={c.uri} >
-    {c.content.replace(/<\/?[^>]*?>/gi, '')}
-  </p>
-))}
+          <Lightbox
+              open={open}
+              close={() => setOpen(false)}
+              slides={srcSet}
+          />
 
-{mail.map((c) => (
-  <a key={c.uri} href={`mailto:${c.content.replace(/<\/?[^>]*?>/gi, '')}`}>
-    <p >{c.content.replace(/<\/?[^>]*?>/gi, '')}</p>
-  </a>
-))}
-              {numero.map((c) => (
-                <p key={c.uri} >
-                  {c.content.replace(/<\/?[^>]*?>/gi, '')}
-                </p>
-              ))}
+          <div id="cv" onClick={handleBox} >
+            {console.log(srcSet)}
+                <div  dangerouslySetInnerHTML={{ __html: content }} />
+                    <div className="cv__infos">
+                        <img src={logo} className="cv__logo" />
+                    <div>
 
-              {contact.map((c) => (
-                <a key={c.uri} href={`mailto:${c.content.replace(/<\/?[^>]*?>/gi, '')}`}>
-                  <p >{c.content.replace(/<\/?[^>]*?>/gi, '')}</p>
-                </a>
-              ))}
-            
-
-
-              </div>
-              </div> 
+                    {nom.map((c) => (
+                        <p key={c.uri}>
+                            {c.content.replace(/<\/?[^>]*?>/gi, '')}
+                        </p>
+                    ))}
+                    {mail.map((c) => (
+                      <a key={c.uri} href={`mailto:${c.content.replace(/<\/?[^>]*?>/gi, '')}`}>
+                        <p >{c.content.replace(/<\/?[^>]*?>/gi, '')}</p>
+                      </a>
+                    ))}
+                    {numero.map((c) => (
+                      <p key={c.uri} >
+                        {c.content.replace(/<\/?[^>]*?>/gi, '')}
+                      </p>
+                    ))}
+                    {contact.map((c) => (
+                      <a key={c.uri} href={`mailto:${c.content.replace(/<\/?[^>]*?>/gi, '')}`}>
+                        <p >{c.content.replace(/<\/?[^>]*?>/gi, '')}</p>
+                      </a>
+                    ))}
+                </div>
+            </div> 
          </div>
-   
-          </React.Fragment>
+      </React.Fragment>
         )
       }
       

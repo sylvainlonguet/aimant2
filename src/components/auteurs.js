@@ -5,7 +5,7 @@ import { Link }  from 'gatsby';
 
 export default function Auteurs() {
   const data = useStaticQuery(graphql`
-    query monQuery {
+    query autQuery {
         allWpPost(
         limit: 1000
         sort: {title: ASC}

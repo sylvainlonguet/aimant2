@@ -5,7 +5,7 @@ import { Link }  from 'gatsby';
 
 export default function Comediennes() {
   const data = useStaticQuery(graphql`
-    query myQuery {
+    query comQuery {
         allWpPost(
         limit: 1000
         sort: {title: ASC}
