@@ -85,52 +85,42 @@ import "yet-another-react-lightbox/styles.css";
     setTimeout(() => {
       const imgList = document.querySelectorAll('img') 
       const selectedImgList = []
-      console.log(imgList)
       imgList.forEach((p, index) => {
         if ((index % 2 !== 0) && (p.currentSrc !== '' ))  {
           selectedImgList.push(p) 
         }
       })
-      console.log(selectedImgList)
       selectedImgList.forEach((p, index) => {
         p.classList.add(`pic${index}`)
         p.addEventListener("click", (e) => handleBox(e) );
       })
-    }, 2000)
+    }, 1500)
 
     const handleBox = (e) => { 
       e.preventDefault();
-      console.log(e.target.className)
       const imgList = document.querySelectorAll('img') 
       const selectedImg = []
       const arrayRest= []
       const orderedSrcSet = []
-      console.log(imgList)
       imgList.forEach((p, index) => {
         if ((index % 2 !== 0) && (p.currentSrc !== '' ))  {
           selectedImg.push(p.currentSrc) 
         }
       })
-      console.log(selectedImg)
       selectedImg.forEach((p, index) => {
         if (`pic${index}` === e.target.className )  {
           orderedSrcSet.push(p) 
-          console.log('meme index')
         } else {
-          console.log('pas meme index')
           arrayRest.push(p) 
         }
       })
       arrayRest.map((p) => {
           orderedSrcSet.push(p) 
       })
-      console.log(orderedSrcSet)
       const filteredSrcSet = orderedSrcSet.filter(name => name.match(/(https?:\/\/.*\.(?:png|jpg))/i))
-      console.log(filteredSrcSet)
       filteredSrcSet.map((p) => {
         srcSetObject.push({src: p})
      })
-      console.log(srcSetObject)
       setSrcSet(srcSetObject)
       setOpen(true)
     }
@@ -192,7 +182,6 @@ import "yet-another-react-lightbox/styles.css";
           />
 
           <div id="cv" onClick={handleBox} >
-            {console.log(srcSet)}
                 <div  dangerouslySetInnerHTML={{ __html: content }} />
                     <div className="cv__infos">
                         <img src={logo} className="cv__logo" />
