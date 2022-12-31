@@ -86,6 +86,7 @@ import "yet-another-react-lightbox/plugins/captions.css";
 
     setTimeout(() => {
       const imgList = document.querySelectorAll('img') 
+      const bannerCont = document.getElementsByClassName('banner-container')
       const selectedImgList = []
       imgList.forEach((p, index) => {
         if ((index % 2 !== 0) && (p.currentSrc !== '' ))  {
@@ -116,14 +117,17 @@ import "yet-another-react-lightbox/plugins/captions.css";
           arrayRest.push(p) 
         }
       })
+      const el = arrayRest.shift(); 
       arrayRest.map((p) => {
           orderedSrcSet.push(p) 
       })
+      orderedSrcSet.push(el) 
       orderedSrcSet.map((p) => {
         srcSetObject.push({src: p.currentSrc, title: p.alt})
      })
       setSrcSet(srcSetObject)
       setOpen(true)
+ 
     }
    
       
