@@ -85,7 +85,7 @@ import "yet-another-react-lightbox/plugins/captions.css";
     const srcSetObject = []
 
     setTimeout(() => {
-      if (document !== undefined) {
+      if (typeof document !== `undefined`) {
       const imgList = document.querySelectorAll('img') 
       const bannerCont = document.getElementsByClassName('banner-container')
       const selectedImgList = []
@@ -102,6 +102,8 @@ import "yet-another-react-lightbox/plugins/captions.css";
     }, 500)
 
     const handleBox = (e) => { 
+      if (typeof document !== `undefined`) {
+
       e.preventDefault();
       const imgList = document.querySelectorAll('img') 
       const selectedImg = []
@@ -131,7 +133,7 @@ import "yet-another-react-lightbox/plugins/captions.css";
      })
       setSrcSet(srcSetObject)
       setOpen(true)
- 
+    }
     }
    
       
