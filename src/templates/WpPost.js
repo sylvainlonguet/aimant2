@@ -85,6 +85,7 @@ import "yet-another-react-lightbox/plugins/captions.css";
     const srcSetObject = []
 
     setTimeout(() => {
+      if (document !== undefined) {
       const imgList = document.querySelectorAll('img') 
       const bannerCont = document.getElementsByClassName('banner-container')
       const selectedImgList = []
@@ -97,7 +98,8 @@ import "yet-another-react-lightbox/plugins/captions.css";
         p.classList.add(`pic${index}`)
         p.addEventListener("click", (e) => handleBox(e) );
       })
-    }, 1500)
+    }
+    }, 500)
 
     const handleBox = (e) => { 
       e.preventDefault();
@@ -123,7 +125,9 @@ import "yet-another-react-lightbox/plugins/captions.css";
       })
       orderedSrcSet.push(el) 
       orderedSrcSet.map((p) => {
-        srcSetObject.push({src: p.currentSrc, title: p.alt})
+        if (p !== undefined)  { 
+          srcSetObject.push({src: p.currentSrc, title: p.alt}) 
+        }
      })
       setSrcSet(srcSetObject)
       setOpen(true)
@@ -187,7 +191,7 @@ import "yet-another-react-lightbox/plugins/captions.css";
               plugins={[Captions]}
           />
 
-          <div id="cv" onClick={handleBox} >
+          <div id="cv"  >
                 <div  dangerouslySetInnerHTML={{ __html: content }} />
                     {/* <div className="cv__infos">
                         <img src={logo} className="cv__logo" />
