@@ -3,7 +3,7 @@
  */
 module.exports = {
   siteMetadata: {
-    title: `.:: aimant ::.`,
+    title: `.:: aimant ::: agence artistique ::.`,
     description: `.:: aimant ::: agence artistique ::.`,
     author: `François Tessier`,
     siteUrl: `https://cms.aimant.art/`, 

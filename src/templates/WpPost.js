@@ -48,12 +48,12 @@ import "yet-another-react-lightbox/plugins/captions.css";
     const [srcSet, setSrcSet] = useState('');   
     const [open, setOpen] = React.useState(false); 
 
-    const generatePDF = () => {
-      const report = new JsPDF('portrait','pt','a1');
-      report.html(document.querySelector('#cv')).then(() => {
-          report.save(`${title}`);
-      });
-    }
+    // const generatePDF = () => {
+    //   const report = new JsPDF('portrait','pt','a1');
+    //   report.html(document.querySelector('#cv')).then(() => {
+    //       report.save(`${title}`);
+    //   });
+    // }
       
     const {
           wpPost: { title, content, uri, id,  acf }
