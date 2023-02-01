@@ -12,17 +12,17 @@ import { SEO } from "../components/seo"
 
 import logo from '../images/aimant_logo.png';
 
-
+const COMEDIENNES = 'comediennes';
+const COMEDIENS = 'comediens';
+const METTEURS = 'metteur-e-s-en-scene';
+const AUTEURS = 'auteurs-realisateurs';
 
 
 export default function Home({ data }) {
-
-
-
-  const catComediennes = data.allWpCategory.edges[3].node.name
-  const catComediens = data.allWpCategory.edges[4].node.name
-  const catMes = data.allWpCategory.edges[8].node.name
-  const catAuteurs = data.allWpCategory.edges[2].node.name
+  const { node: { name: catComediennes} = {} } = data.allWpCategory.edges.find((e) => e.node.slug === COMEDIENNES) || {}
+  const { node: { name: catComediens} = {} }  = data.allWpCategory.edges.find((e) => e.node.slug === COMEDIENS) || {}
+  const { node: { name: catMes} = {} }  = data.allWpCategory.edges.find((e) => e.node.slug === METTEURS) || {}
+  const { node: { name: catAuteurs} = {} } = data.allWpCategory.edges.find((e) => e.node.slug === AUTEURS) || {}
 
 
   const comediennes = data.allWpPost.nodes.filter(
