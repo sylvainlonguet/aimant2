@@ -5,13 +5,16 @@ import parse from "html-react-parser";
 import Vimeo from "@u-wave/react-vimeo";
 import YouTube from "react-youtube";
 import "../components/style.scss";
-import JsPDF from "jspdf";
+
 import logo from "../images/aimant_logo.png";
 import { parseSrcset, stringifySrcset } from "srcset";
 import Lightbox from "yet-another-react-lightbox";
 import Captions from "yet-another-react-lightbox/plugins/captions";
 import "yet-another-react-lightbox/styles.css";
 import "yet-another-react-lightbox/plugins/captions.css";
+import logopdf from "../images/pdf.png";
+import pdfbuilder from "../components/pdf/pdfbuilder";
+import SEOArtiste from "../components/seoartiste";
 
 const ref = React.createRef();
 
@@ -35,6 +38,20 @@ const options = {
   },
 };
 
+const getIntituleMetierFromSlug = (slug) => {
+  switch (slug) {
+    case "comediennes":
+      return "Comédienne";
+
+    case "comedien":
+      return "Comédien";
+
+    case "metteur-e-s-en-scene":
+      return "Metteur en scène";
+  }
+  return "";
+};
+
 const replaceImage = (content) =>
   content &&
   content.replace(
@@ -47,16 +64,17 @@ const WpPost = ({ data }) => {
   const [srcSet, setSrcSet] = useState("");
   const [open, setOpen] = React.useState(false);
 
-  // const generatePDF = () => {
-  //   const report = new JsPDF('portrait','pt','a1');
-  //   report.html(document.querySelector('#cv')).then(() => {
-  //       report.save(`${title}`);
-  //   });
-  // }
+  const generatePDF = () => {
+    pdfbuilder.build(data);
+  };
 
   const {
-    wpPost: { title, content, uri, id, acf },
+    wpPost: { title, content, uri, id, acf, categories },
   } = data;
+
+  // Initulé "élégant" lié à la catégorie 'Comédienne' ...
+  const metier = getIntituleMetierFromSlug(categories.nodes[0].slug);
+
   const clearContent = replaceImage(content);
   const { video = "" } = acf || {};
   const { bannerpicture = "" } = acf || {};
@@ -139,6 +157,10 @@ const WpPost = ({ data }) => {
 
   return (
     <React.Fragment>
+      <SEOArtiste
+        title={`.:: ${title} - aimant - agence artistique ::.`}
+        description={`${title} ${metier} Agent : François Tessier f.tessier@aimant.art`}
+      />
       <div className={`post-${id}`}>
         {bannerpicture && bannerpicture.sourceUrl && (
           <div
@@ -181,7 +203,13 @@ const WpPost = ({ data }) => {
           </React.Fragment>
         )}
 
-        {/* <p onClick={generatePDF} className="cv__button">Télécharger le CV en PDF</p> */}
+        <button
+          onClick={generatePDF}
+          title="Convertir en PDF"
+          className="cv__button pdf-button"
+        >
+          <img src={logopdf} alt="Convertir le CV en PDF"></img>
+        </button>
       </div>
 
       <Lightbox
@@ -239,6 +267,13 @@ export const query = graphql`
           sourceUrl
         }
         video
+      }
+      categories {
+        nodes {
+          id
+          name
+          slug
+        }
       }
     }
     allWpPost(limit: 1000, sort: { title: ASC }) {
