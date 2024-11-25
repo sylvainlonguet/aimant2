@@ -1,10 +1,9 @@
 import JsPDF from "jspdf";
-import React from "react";
 import logoAimant from "../../images/LOGO AIMANT.jpeg"; // image d'entete
 import "../../fonts/Didot-normal.js"; // Police Didot Normal
 import "../../fonts/Didot-bold.js"; // Police Didot Normal
 
-// Charger Didot dans le CSS (côté navigateur)
+// Didot dans le CSS pour les exports PDF via HTML()
 const loadFont = () => {
   const style = document.createElement("style");
   style.innerHTML = `
@@ -23,7 +22,7 @@ const loadFont = () => {
 function extract_titre(data) {
   return data.wpPost.title;
 }
-function extract_sous_titre(data) {
+function extract_metier(data) {
   const {
     wpPost: { categories },
   } = data;
@@ -55,13 +54,7 @@ function extract_common_data(data, key) {
 /**
  * retourne le bloc HTML d'entete avec les infos de l'agence
  */
-function get_html_agency(adresse, url, telephone, nom, mail) {
-  // NB : La police Didot est assez mal rendue avec jsPDF. Il vaut mieux doubler les espaces
-
-  //adresse = adresse.replaceAll(" ", "&nbsp;&nbsp;");
-
-  //nom = nom.replaceAll(" ", "&nbsp;&nbsp;");
-
+function get_html_header(adresse, url, telephone, nom, mail) {
   const el = document.createElement("div");
   el.innerHTML = `<div style='width:585px' class = 'didot'> 
                     <p  style='text-align:center;margin-bottom:7px'>
@@ -133,9 +126,9 @@ function get_html_images(images) {
 
 export default {
   async build(data) {
-    const tempNodes = [];
+    const nodesToFlush = [];
     const titre = extract_titre(data);
-    const sousTitre = extract_sous_titre(data);
+    const metier = extract_metier(data);
     const txt_num_tel = extract_common_data(data, "numero");
 
     // sit web de l'agence
@@ -157,7 +150,7 @@ export default {
     //report.setFont("Didot Regular", "normal");
 
     const tempStyle = loadFont();
-    tempNodes.push(tempStyle);
+    nodesToFlush.push(tempStyle);
 
     let current_pos = 15;
     const INTERLN = 15;
@@ -175,16 +168,16 @@ export default {
     current_pos += INTERLN / 2;
 
     // entete
-    const htmlAgency = get_html_agency(
+    const htmlHeader = get_html_header(
       txt_adresse_post_agence,
       txt_url_agence,
       txt_num_tel,
       txt_nom_agent,
       txt_mail_agent
     );
-    tempNodes.push(htmlAgency);
+    nodesToFlush.push(htmlHeader);
 
-    await report.html(htmlAgency, {
+    await report.html(htmlHeader, {
       x: 5,
       y: current_pos,
     });
@@ -203,7 +196,7 @@ export default {
     // Sous-titre (categorie)
     report.setFontSize(15);
     report.setTextColor(100, 100, 100); // Couleur gris foncé
-    report.text(sousTitre, pageWidth / 2, current_pos, {
+    report.text(metier, pageWidth / 2, current_pos, {
       align: "center",
     });
 
@@ -212,7 +205,7 @@ export default {
     // Images
     const images = document.querySelectorAll("#cv img[data-wp-inline-image]");
     const html_images = get_html_images([images[1], images[3]]);
-    tempNodes.push(html_images);
+    nodesToFlush.push(html_images);
     await report.html(html_images, {
       x: 5,
       y: current_pos,
@@ -222,10 +215,6 @@ export default {
 
     console.log("Construction du CV");
 
-    // Le CV
-    const blocs_CV = document.querySelectorAll("#cv div.wp-block-column");
-    const blocTXT = blocs_CV[1];
-
     // pied de page / page 1
     const footer1 = get_html_footer(
       txt_adresse_post_agence,
@@ -234,16 +223,39 @@ export default {
       txt_nom_agent,
       txt_mail_agent
     );
-    tempNodes.push(footer1);
+    nodesToFlush.push(footer1);
     await report.html(footer1, {
       x: 5,
       y: 810,
       width: 500,
     });
 
+    // PARCOURS DU CV
     let textToDisplay = "";
     let nbPages = 0;
+
+    const blocs_CV = document.querySelectorAll("#cv div.wp-block-column");
+    const blocTXT = blocs_CV[1];
+
+    // Remplacement des <br> par des paragraphes
+    for (const paragraph of blocTXT.children) {
+      if (paragraph.innerHTML.includes("<br>")) {
+        const parts = paragraph.innerHTML.split("<br>");
+
+        let lastNewPar = paragraph;
+        parts.forEach((part) => {
+          const newParagraph = document.createElement("p");
+          newParagraph.innerHTML = part.trim();
+          lastNewPar.after(newParagraph);
+          lastNewPar = newParagraph;
+        });
+
+        blocTXT.removeChild(paragraph);
+      }
+    }
+
     for (const child of blocTXT.children) {
+      // saut de page
       let lineBreak =
         (child.tagName == "H3" && current_pos % 842 > 650) ||
         current_pos % 842 > 800;
@@ -253,6 +265,7 @@ export default {
         current_pos = 30;
       }
 
+      // 3 types de contenu gérés : titre H3, ligne normale, ligne en italique
       if (child.tagName === "H3") {
         // titre de section de CV
         current_pos += 15;
@@ -261,6 +274,7 @@ export default {
         report.setFontSize(13);
         report.setTextColor(0, 0, 0); // Couleur noire
         report.text(textToDisplay, 50, current_pos);
+        current_pos += 15;
       } else {
         textToDisplay = child.innerText;
         if (child.innerHTML.includes("<em>")) {
@@ -272,11 +286,19 @@ export default {
         }
         report.setFontSize(13);
         report.setTextColor(0, 0, 0); // Couleur noire
-        report.text(textToDisplay, 50, current_pos);
+        const lines = report.splitTextToSize(textToDisplay, pageWidth - 50);
+
+        console.log(lines.length);
+        lines.forEach((line) => {
+          report.text(line, 50, current_pos);
+          current_pos += 15;
+        });
+
+        //report.text(textToDisplay, 50, current_pos);
       }
-      current_pos += 15;
 
       if (lineBreak) {
+        // Ecriture du footer sur nouvelle page
         // IMP! : faire le footer une fois seulement qu'on a commencé à écrire sur la nouvelle page
         // autrement JsPdf bugge!
 
@@ -287,7 +309,7 @@ export default {
           txt_nom_agent,
           txt_mail_agent
         );
-        tempNodes.push(newFooter);
+        nodesToFlush.push(newFooter);
 
         await report.html(newFooter, {
           x: 5,
@@ -297,23 +319,12 @@ export default {
       }
     }
 
+    // Génération finale du PDF
     report.save(`${titre}`);
 
-    /*
-    tempNodes.forEach((element) => {
+    // Remove des noeuds HTML temporaires
+    nodesToFlush.forEach((element) => {
       document.body.removeChild(element);
     });
-*/
-    //document.body.removeChild(htmlAgency);
-    //document.body.removeChild(htmlAgent);
-  },
-
-  wrap(htmlContent) {
-    return `
-      
-        
-        ${htmlContent.outerHTML}
-      
-    `;
   },
 };
