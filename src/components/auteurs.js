@@ -1,48 +1,56 @@
-import React from "react"
-import { useStaticQuery, graphql } from "gatsby"
-import { Link }  from 'gatsby';
-
+import React from "react";
+import { useStaticQuery, graphql } from "gatsby";
+import { Link } from "gatsby";
 
 export default function Auteurs() {
   const data = useStaticQuery(graphql`
     query autQuery {
-        allWpPost(
+      allWpPost(
         limit: 1000
-        sort: {title: ASC}
-        filter: {categories: {nodes: {elemMatch: {slug: {eq: "auteurs-realisateurs"}}}}}
-  ) {
-    nodes {
-      id
-      title
-      content
-      excerpt
-      uri
-      acf {
-        mignature {
+        sort: { title: ASC }
+        filter: {
+          categories: {
+            nodes: { elemMatch: { slug: { eq: "auteurs-realisateurs" } } }
+          }
+        }
+      ) {
+        nodes {
           id
-          sourceUrl
+          title
+          content
+          excerpt
+          uri
+          acf {
+            mignature {
+              id
+              sourceUrl
+            }
+          }
+          seo {
+            title
+            description
+          }
         }
       }
     }
-  }
-    }
-  `)
-
-
-
+  `);
 
   return (
     <div className="grid-container">
-    {data.allWpPost.nodes.map((c) => (
-      <Link key={c.uri} to={c.uri}>
-        <div className="grid-item">
-          <div className="picture">
-            {c.acf.mignature ? <img src={c.acf.mignature.sourceUrl} alt="photo" /> : ' '}
+      {data.allWpPost.nodes.map((c) => (
+        <Link key={c.uri} to={c.uri}>
+          <div className="grid-item">
+            <div className="picture">
+              {c.acf.mignature ? (
+                <img src={c.acf.mignature.sourceUrl} alt="photo" />
+              ) : (
+                " "
+              )}
+            </div>
+            <p>{c.excerpt.replace(/<\/?[^>]*?>/gi, "")}</p>
           </div>
-          <p>{c.excerpt.replace(/<\/?[^>]*?>/gi, '')}</p>
-        </div>
-      </Link>
-    ))}
+        </Link>
+      ))}
     </div>
-  )
+  );
 }

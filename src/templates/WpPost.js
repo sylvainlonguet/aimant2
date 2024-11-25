@@ -69,12 +69,18 @@ const WpPost = ({ data }) => {
   };
 
   const {
-    wpPost: { title, content, uri, id, acf, categories },
+    wpPost: { title, content, uri, id, acf, seo, categories },
   } = data;
 
   // Initulé "élégant" lié à la catégorie 'Comédienne' ...
   const metier = getIntituleMetierFromSlug(categories.nodes[0].slug);
 
+  // SEO
+  const seo_title =
+    seo.title || `.:: ${title} - aimant - agence artistique ::.`;
+  const seo_description =
+    seo.description ||
+    `${title} ${metier} Agent : François Tessier f.tessier@aimant.art`;
   const clearContent = replaceImage(content);
   const { video = "" } = acf || {};
   const { bannerpicture = "" } = acf || {};
@@ -157,10 +163,7 @@ const WpPost = ({ data }) => {
 
   return (
     <React.Fragment>
-      <SEOArtiste
-        title={`.:: ${title} - aimant - agence artistique ::.`}
-        description={`${title} ${metier} Agent : François Tessier f.tessier@aimant.art`}
-      />
+      <SEOArtiste title={seo_title} description={seo_description} />
       <div className={`post-${id}`}>
         {bannerpicture && bannerpicture.sourceUrl && (
           <div
@@ -268,6 +271,10 @@ export const query = graphql`
         }
         video
       }
+      seo {
+        title
+        description
+      }
       categories {
         nodes {
           id
@@ -288,6 +295,10 @@ export const query = graphql`
             id
             sourceUrl
           }
+        }
+        seo {
+          title
+          description
         }
         categories {
           nodes {

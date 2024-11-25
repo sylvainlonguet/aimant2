@@ -95,6 +95,8 @@ function get_html_footer(adresse, url, telephone, nom, mail) {
 function get_html_images(images) {
   const contentDiv = document.createElement("div");
   contentDiv.style.width = "585px";
+  contentDiv.style.display = "flex";
+  contentDiv.style.justifyContent = "center";
 
   // Créer les éléments d'image
   for (let ii = 0; ii < 2; ii++) {
@@ -102,20 +104,12 @@ function get_html_images(images) {
 
     let img = document.createElement("img");
     img.src = image.src;
-    //img.style.width = "220px";
+    img.style.maxWidth = "250px";
     img.style.height = "250px";
     img.style.objectFit = "cover";
-    if (ii == 0) {
-      let finalMargin = Math.max(71 + 220 - (img.width / img.height) * 250, 71);
-      if (isNaN(finalMargin)) finalMargin = 71;
+    img.style.marginRight = "1px";
+    img.style.marginLeft = "1px";
 
-      console.log(finalMargin);
-      img.style.marginLeft = `${finalMargin}px`;
-      img.style.marginRight = "1px";
-    } else {
-      img.style.marginLeft = "1px";
-      img.style.marginRight = "0px";
-    }
     contentDiv.appendChild(img);
   }
 
