@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { graphql } from "gatsby";
 import parse from "html-react-parser";
 // import SimpleReactLightbox, { SRLWrapper } from 'simple-react-lightbox';
@@ -109,35 +109,54 @@ const WpPost = ({ data }) => {
   const regex = /(https?:\/\/.*\.(?:png|jpg|jpeg))/i;
 
   const srcSetObject = [];
+  const imageSelector = "figure:not(.banner) img:not([role])";
 
-  setTimeout(() => {
-    if (typeof document !== `undefined`) {
-      const imgList = document.querySelectorAll("img");
+  //setTimeout(() => {
+  useEffect(() => {
+    const handlePageLoad = () => {
+      console.log("Page complètement chargée !");
+      const imgList = document.querySelectorAll(imageSelector);
       const bannerCont = document.getElementsByClassName("banner-container");
       const selectedImgList = [];
       imgList.forEach((p, index) => {
-        if (index % 2 !== 0 && p.currentSrc !== "") {
-          selectedImgList.push(p);
+        selectedImgList.push(p);
+
+        // forcer le chargement meme si en dehors du viewport
+        if (p.dataset.src) {
+          p.src = p.dataset.src;
         }
+        if (p.dataset.srcset) {
+          p.srcset = p.dataset.srcset;
+        }
+        p.removeAttribute("loading");
       });
       selectedImgList.forEach((p, index) => {
         p.classList.add(`pic${index}`);
+        p.style.cursor = "pointer";
         p.addEventListener("click", (e) => handleBox(e));
       });
-    }
-  }, 500);
+      console.log(`${selectedImgList.length} images chargées dans le carousel`);
+    };
+
+    setTimeout(() => {
+      handlePageLoad();
+    }, 800);
+
+    return () => {};
+  }, []);
 
   const handleBox = (e) => {
     if (typeof document !== `undefined`) {
       e.preventDefault();
-      const imgList = document.querySelectorAll("img");
+
+      const imgList = document.querySelectorAll(imageSelector);
       const selectedImg = [];
       const arrayRest = [];
       const orderedSrcSet = [];
       imgList.forEach((p, index) => {
-        if (index % 2 !== 0 && p.currentSrc !== "") {
-          selectedImg.push(p);
-        }
+        //if (/*index % 2 !== 0 &&*/ p.currentSrc !== "") {
+        selectedImg.push(p);
+        //}
       });
       selectedImg.forEach((p, index) => {
         if (`pic${index}` === e.target.className) {

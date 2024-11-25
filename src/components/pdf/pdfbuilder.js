@@ -99,12 +99,12 @@ function get_html_images(images) {
   contentDiv.style.justifyContent = "center";
 
   // Créer les éléments d'image
-  for (let ii = 0; ii < 2; ii++) {
+  for (let ii = 0; ii < images.length; ii++) {
     let image = images[ii];
 
     let img = document.createElement("img");
     img.src = image.src;
-    img.style.maxWidth = "250px";
+    img.style.maxWidth = "300px";
     img.style.height = "250px";
     img.style.objectFit = "cover";
     img.style.marginRight = "1px";
@@ -120,7 +120,11 @@ function get_html_images(images) {
 
 export default {
   async build(data) {
+    console.log("Building PDF...");
     const nodesToFlush = [];
+
+    console.log("Extracting data");
+
     const titre = extract_titre(data);
     const metier = extract_metier(data);
     const txt_num_tel = extract_common_data(data, "numero");
@@ -143,11 +147,15 @@ export default {
     const report = new JsPDF("portrait", "pt", "a4");
     //report.setFont("Didot Regular", "normal");
 
+    console.log("Font ");
+
     const tempStyle = loadFont();
     nodesToFlush.push(tempStyle);
 
     let current_pos = 15;
     const INTERLN = 15;
+
+    console.log("Header image");
 
     // Logo AIMANT ////////////
     const pageWidth = report.internal.pageSize.width;
@@ -162,6 +170,8 @@ export default {
     current_pos += INTERLN / 2;
 
     // entete
+    console.log("Header text");
+
     const htmlHeader = get_html_header(
       txt_adresse_post_agence,
       txt_url_agence,
@@ -177,6 +187,8 @@ export default {
     });
 
     current_pos += 75;
+
+    console.log("Main title");
 
     // Nom de l'artiste
     report.setFontSize(24);
@@ -196,18 +208,30 @@ export default {
 
     current_pos += 20;
 
+    console.log("Photos");
     // Images
-    const images = document.querySelectorAll("#cv img[data-wp-inline-image]");
-    const html_images = get_html_images([images[1], images[3]]);
-    nodesToFlush.push(html_images);
-    await report.html(html_images, {
-      x: 5,
-      y: current_pos,
-    });
+    const imageSelector = "figure:not(.banner) img:not([role])";
+    const images = document.querySelectorAll(imageSelector);
+
+    if (images.length >= 2) {
+      const html_images = get_html_images([images[0], images[1]]);
+      nodesToFlush.push(html_images);
+      await report.html(html_images, {
+        x: 5,
+        y: current_pos,
+      });
+    } else if (images.length >= 1) {
+      const html_images_b = get_html_images([images[1]]);
+      nodesToFlush.push(html_images_b);
+      await report.html(html_images_b, {
+        x: 5,
+        y: current_pos,
+      });
+    }
 
     current_pos += 260;
 
-    console.log("Construction du CV");
+    console.log("CV");
 
     // pied de page / page 1
     const footer1 = get_html_footer(
@@ -231,6 +255,7 @@ export default {
     const blocs_CV = document.querySelectorAll("#cv div.wp-block-column");
     const blocTXT = blocs_CV[1];
 
+    console.log("Replacing <br> tags");
     // Remplacement des <br> par des paragraphes
     for (const paragraph of blocTXT.children) {
       if (paragraph.innerHTML.includes("<br>")) {
@@ -248,6 +273,7 @@ export default {
       }
     }
 
+    console.log("Parsing lines");
     for (const child of blocTXT.children) {
       // saut de page
       let lineBreak =
@@ -262,8 +288,11 @@ export default {
       // 3 types de contenu gérés : titre H3, ligne normale, ligne en italique
       if (child.tagName === "H3") {
         // titre de section de CV
+
         current_pos += 15;
         textToDisplay = child.innerText.toUpperCase();
+        console.log(" -- " + textToDisplay);
+
         report.setFont("Times", "bold");
         report.setFontSize(13);
         report.setTextColor(0, 0, 0); // Couleur noire
@@ -271,6 +300,7 @@ export default {
         current_pos += 15;
       } else {
         textToDisplay = child.innerText;
+        console.log(" --- " + textToDisplay);
         if (child.innerHTML.includes("<em>")) {
           // en italique
           report.setFont("Times", "italic");
@@ -282,7 +312,6 @@ export default {
         report.setTextColor(0, 0, 0); // Couleur noire
         const lines = report.splitTextToSize(textToDisplay, pageWidth - 50);
 
-        console.log(lines.length);
         lines.forEach((line) => {
           report.text(line, 50, current_pos);
           current_pos += 15;
@@ -313,6 +342,7 @@ export default {
       }
     }
 
+    console.log("Finalizing...");
     // Génération finale du PDF
     report.save(`${titre}`);
 
