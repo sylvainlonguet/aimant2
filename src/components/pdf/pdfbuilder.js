@@ -20,7 +20,9 @@ const loadFont = () => {
 };
 
 function extract_titre(data) {
-  return data.wpPost.title;
+  const h2_ = document.querySelectorAll("h2");
+  if (h2_ && h2_.length == 1 && h2_[0].innerText) return h2_[0].innerText;
+  else return data.wpPost.title;
 }
 function extract_metier(data) {
   const {
@@ -56,12 +58,12 @@ function extract_common_data(data, key) {
  */
 function get_html_header(adresse, url, telephone, nom, mail) {
   const el = document.createElement("div");
-  el.innerHTML = `<div style='width:585px' class = 'didot'> 
-                    <p  style='text-align:center;margin-bottom:7px'>
+  el.innerHTML = `<div style='width:585px;' class = 'didot'> 
+                    <p  style='text-align:center;margin-bottom:7px;font-size:12px;'>
                         ${adresse} - ${telephone} &nbsp;
                         <span style='color:red;text-decoration:underline;'>www.aimant.art</span>
                     </p>
-                    <p style='text-align:center'>
+                    <p style='text-align:center;font-size:12px;'>
                         Agent : ${nom}&nbsp&nbsp- &nbsp;
                         <span style='color:red;text-decoration:underline'>${mail}</span>
                     </p>
@@ -105,7 +107,7 @@ function get_html_images(images) {
     let img = document.createElement("img");
     img.src = image.src;
     img.style.maxWidth = "300px";
-    img.style.height = "250px";
+    img.style.height = "215px";
     img.style.objectFit = "cover";
     img.style.marginRight = "1px";
     img.style.marginLeft = "1px";
@@ -167,7 +169,7 @@ export default {
 
     current_pos += imageHeight;
 
-    current_pos += INTERLN / 2;
+    current_pos += 25;
 
     // entete
     console.log("Header text");
@@ -229,7 +231,7 @@ export default {
       });
     }
 
-    current_pos += 260;
+    current_pos += 280;
 
     console.log("CV");
 
