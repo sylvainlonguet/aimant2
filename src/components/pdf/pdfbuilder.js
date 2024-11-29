@@ -121,13 +121,12 @@ function get_html_images(images) {
 }
 
 export default {
-  async build(data) {
+  async build(data, titre) {
     console.log("Building PDF...");
     const nodesToFlush = [];
 
     console.log("Extracting data");
 
-    const titre = extract_titre(data);
     const metier = extract_metier(data);
     const txt_num_tel = extract_common_data(data, "numero");
 
@@ -215,6 +214,7 @@ export default {
     const imageSelector = "figure:not(.banner) img:not([role])";
     const images = document.querySelectorAll(imageSelector);
 
+    /* finalement le client ne veut qu'1 image 
     if (images.length >= 2) {
       const html_images = get_html_images([images[0], images[1]]);
       nodesToFlush.push(html_images);
@@ -230,8 +230,16 @@ export default {
         y: current_pos,
       });
     }
-
-    current_pos += 280;
+      */
+    if (images.length >= 1) {
+      const html_images = get_html_images([images[0]]);
+      nodesToFlush.push(html_images);
+      await report.html(html_images, {
+        x: 5,
+        y: current_pos,
+      });
+    }
+    current_pos += 250;
 
     console.log("CV");
 
@@ -279,8 +287,8 @@ export default {
     for (const child of blocTXT.children) {
       // saut de page
       let lineBreak =
-        (child.tagName == "H3" && current_pos % 842 > 650) ||
-        current_pos % 842 > 800;
+        (child.tagName == "H3" && current_pos % 842 > 750) ||
+        current_pos % 842 > 780;
       if (lineBreak) {
         nbPages++;
         report.addPage();
@@ -303,7 +311,8 @@ export default {
       } else {
         textToDisplay = child.innerText;
         console.log(" --- " + textToDisplay);
-        if (child.innerHTML.includes("<em>")) {
+        if (child.innerHTML.startsWith("<em>")) {
+          console.log("italique ==>", child.innerHTML);
           // en italique
           report.setFont("Times", "italic");
         } else {
@@ -315,7 +324,8 @@ export default {
         const lines = report.splitTextToSize(textToDisplay, pageWidth - 50);
 
         lines.forEach((line) => {
-          report.text(line, 50, current_pos);
+          const sanitizedline = line.replaceAll("′", "'");
+          report.text(sanitizedline, 50, current_pos, { charSpace: 0 });
           current_pos += 15;
         });
 
@@ -346,7 +356,7 @@ export default {
 
     console.log("Finalizing...");
     // Génération finale du PDF
-    report.save(`${titre}`);
+    report.save(`${titre}-aimant-agence-artistique`);
 
     // Remove des noeuds HTML temporaires
     nodesToFlush.forEach((element) => {

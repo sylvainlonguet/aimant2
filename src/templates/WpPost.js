@@ -59,13 +59,21 @@ const replaceImage = (content) =>
     `https://cms.aimant.art`
   );
 
+const extractPrenom_Nom = (data) => {
+  const h2_ = document.querySelectorAll("h2");
+  if (h2_ && h2_.length == 1 && h2_[0].innerText) return h2_[0].innerText;
+  else return data.wpPost.title;
+};
+
 const WpPost = ({ data }) => {
   const [firstPic, setFirstPic] = useState("");
   const [srcSet, setSrcSet] = useState("");
   const [open, setOpen] = React.useState(false);
 
+  const [titre, setTitre] = useState(data.wpPost.title);
+
   const generatePDF = () => {
-    pdfbuilder.build(data);
+    pdfbuilder.build(data, titre);
   };
 
   const {
@@ -77,10 +85,10 @@ const WpPost = ({ data }) => {
 
   // SEO
   const seo_title =
-    seo.title || `.:: ${title} - aimant - agence artistique ::.`;
+    seo.title || `.:: ${titre} - aimant - agence artistique ::.`;
   const seo_description =
     seo.description ||
-    `${title} ${metier} Agent : François Tessier f.tessier@aimant.art`;
+    `${titre} ${metier} Agent : François Tessier f.tessier@aimant.art`;
   const clearContent = replaceImage(content);
   const { video = "" } = acf || {};
   const { bannerpicture = "" } = acf || {};
@@ -140,6 +148,7 @@ const WpPost = ({ data }) => {
 
     setTimeout(() => {
       handlePageLoad();
+      setTitre(extractPrenom_Nom(data));
     }, 800);
 
     return () => {};

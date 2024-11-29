@@ -1,10 +1,12 @@
 /* Style du bouton */
+
+
 .pdf-button {
   position: fixed;
   top: 20px;
   right: 20px;
-  width: 100px;
-  height: 100px;
+  width: 50px;
+  height: 50px;
   background-color: rgb(255, 255, 255);
   color: white;
   border: none;
@@ -19,6 +21,7 @@
   transition: background-color 0.3s, transform 0.3s;
 }
 
+
 .pdf-button:hover {
   background-color: rgb(200, 200, 200);
   transform: scale(1.1);
@@ -29,6 +32,19 @@
 }
 
 .pdf-button img {
-width: 50px;
+width: 30px;
 margin-bottom: 0px;
+}
+
+@media (min-width: 700px) {
+  .pdf-button {
+    width: 70px;
+    height: 70px;
+  
+}
+
+.pdf-button img {
+  width: 40px;
+  margin-bottom: 0px;
+  }
 }
