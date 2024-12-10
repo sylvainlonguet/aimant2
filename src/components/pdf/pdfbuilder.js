@@ -356,7 +356,25 @@ export default {
 
     console.log("Finalizing...");
     // Génération finale du PDF
-    report.save(`${titre}-aimant-agence-artistique`);
+
+    if (
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent
+      )
+    ) {
+      var blob = report.output("blob");
+      var fileName = `${titre}-aimant-agence-artistique.pdf`;
+
+      var link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = fileName; // Définit le nom du fichier
+
+      document.body.appendChild(link);
+      link.click();
+
+      document.body.removeChild(link);
+      URL.revokeObjectURL(link.href);
+    } else report.save(`${titre}-aimant-agence-artistique`);
 
     // Remove des noeuds HTML temporaires
     nodesToFlush.forEach((element) => {
