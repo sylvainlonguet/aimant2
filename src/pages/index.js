@@ -187,7 +187,7 @@ export default function Home({ data }) {
           </a>
         ))}
 
-        <p className="ex">Assisté par Noémie Vanier </p>
+        <p className="ex">Assisté de Lila Cousin</p>
         {adresse.map((c) => (
           <a
             key={c.uri}
