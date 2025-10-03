@@ -189,11 +189,11 @@ export default function Home({ data }) {
 
         <p className="ex">Assisté de Lila Cousin</p>
         {adresse.map((c) => (
-          <a style="font-size:12px;"
+          <a
             key={c.uri}
             href={`mailto:${c.content.replace(/<\/?[^>]*?>/gi, "")}`}
           >
-            <p className="infos">{c.content.replace(/<\/?[^>]*?>/gi, "")}</p>
+            <p style="font-size:10px;" className="infos">{c.content.replace(/<\/?[^>]*?>/gi, "")}</p>
           </a>
         ))}
 
